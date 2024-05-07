@@ -30,6 +30,7 @@ public class CourseInput extends HBox {
                 mainPane.removeCourse(CourseInput.this);            }
         });
 
+        setSpacing(10);
         getChildren().addAll(courseNameField, numCreditsCb, letterGradeCB, destroyBtn);
     }
 
