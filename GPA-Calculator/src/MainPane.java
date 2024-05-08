@@ -8,6 +8,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
@@ -27,8 +28,10 @@ public class MainPane extends VBox {
     public String estimatedLetterGrade;
     private Label estimatedGPALabel = new Label("GPA: 0.0");
     private Label estimatedLetterLabel = new Label("F");
+    private Label errorText = new Label("");
 
     public MainPane() {
+        errorText.setTextFill(Color.RED);
         calculateButton.setOnAction(new onCalculate());
 
         title.setFont(Font.font("Arial",FontWeight.BOLD, 25));
@@ -49,7 +52,7 @@ public class MainPane extends VBox {
 
         buttonsPane.setPrefWidth(Screen.getPrimary().getBounds().getWidth() * 0.5);
         buttonsPane.setSpacing(5);
-        buttonsPane.getChildren().addAll(addCourseBtn, calculateButton, estimatedGPALabel, estimatedLetterLabel, saveBtn, loadBtn);
+        buttonsPane.getChildren().addAll(addCourseBtn, calculateButton, estimatedGPALabel, estimatedLetterLabel, saveBtn, loadBtn, errorText);
         estimatedGPALabel.setFont(Font.font("Arial",FontWeight.BOLD, 25));
         estimatedLetterLabel.setFont(Font.font("Arial",FontWeight.BOLD, 25));
 
@@ -74,6 +77,10 @@ public class MainPane extends VBox {
     {
         @Override
         public void handle(ActionEvent actionEvent) {
+            if(inputList.isEmpty()){
+                errorText.setText("Course list is empty.");
+                return;
+            }
             //do GPA Calculation
             int totalCredits = 0;
             double totalGPA = 0.0;
@@ -119,7 +126,7 @@ public class MainPane extends VBox {
                     totalGPA += inputList.get(i).numCreditsCb.getValue() * letterGradeVal;
                 }
                 else{
-                    System.out.println("Error in input");
+                    errorText.setText("Error in input.");
                     return;
                 }
             }
@@ -159,6 +166,7 @@ public class MainPane extends VBox {
                 estimatedLetterGrade = "E";
             }
             estimatedLetterLabel.setText(estimatedLetterGrade);
+            errorText.setText("");
         }
     }
 
