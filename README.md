@@ -1,4 +1,4 @@
 # GPA-calculator
 
-I created this to help me project my GPA because I'm inpatient and obsessed with my grades.
+I created this to help me project my GPA because I'm impatient and obsessed with my grades.\n
 This app uses JavaFX as well as H2 DB.
