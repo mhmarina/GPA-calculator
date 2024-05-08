@@ -2,19 +2,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
-
-import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class MainPane extends VBox {
     private Label title = new Label("Marina's GPA Calculator");
@@ -174,8 +171,17 @@ public class MainPane extends VBox {
     }
 
     private class onSave implements EventHandler<ActionEvent>{
+        Alert alert;
         @Override
         public void handle(ActionEvent actionEvent) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText("Are you sure?");
+            alert.setContentText("Saving will overwrite anything previously saved. Proceed?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.isPresent() && result.get() == ButtonType.CANCEL){
+                return;
+            }
+
             //insert everything into database.
             Connection connection;
             try {
@@ -185,7 +191,7 @@ public class MainPane extends VBox {
             }
             // Clear the table before inserting new data
             try (Statement clearStatement = connection.createStatement()) {
-                clearStatement.executeUpdate("DELETE FROM COURSES"); // Or use TRUNCATE TABLE EFFORT_LOGS
+                clearStatement.executeUpdate("DELETE FROM COURSES");
             } catch (SQLException e) {
                 throw new RuntimeException("Failed to clear the table", e);
             }
@@ -210,8 +216,17 @@ public class MainPane extends VBox {
 
     //Extract fields from DB...
     private class onLoad implements EventHandler<ActionEvent>{
+        //confirmation popup
+        Alert alert;
         @Override
         public void handle(ActionEvent actionEvent) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText("Are you sure?");
+            alert.setContentText("Loading will clear any unsaved changes. Proceed?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.isPresent() && result.get() == ButtonType.CANCEL){
+                return;
+            }
             //clear arraylist
             inputList.clear();
             inputColumn.getChildren().clear();

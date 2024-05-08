@@ -5,7 +5,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.control.TextField;
 import javafx.event.ActionEvent;
 
-
 public class CourseInput extends HBox {
     public TextField courseNameField = new TextField();
     public ComboBox<Integer> numCreditsCb = new ComboBox<>();
