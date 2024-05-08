@@ -34,14 +34,6 @@ public class CourseInput extends HBox {
         getChildren().addAll(courseNameField, numCreditsCb, letterGradeCB, destroyBtn);
     }
 
-    //overloaded constructor
-    public CourseInput(MainPane mp, String cname, int numCreds, String letter){
-        CourseInput cInput = new CourseInput(mp);
-        cInput.letterGradeCB.setValue(letter);
-        cInput.numCreditsCb.setValue(numCreds);
-        cInput.courseNameField.setText(cname);
-    }
-
     public boolean verifyInput() {
         //verify that a grade and credit num is selected
         if (numCreditsCb.getSelectionModel().getSelectedIndex() == -1) {

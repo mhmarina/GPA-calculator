@@ -11,6 +11,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
+
+import javax.swing.*;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class MainPane extends VBox {
@@ -32,7 +35,8 @@ public class MainPane extends VBox {
     public MainPane() {
         errorText.setTextFill(Color.RED);
         calculateButton.setOnAction(new onCalculate());
-
+        saveBtn.setOnAction(new onSave());
+        loadBtn.setOnAction(new onLoad());
         title.setFont(Font.font("Arial",FontWeight.BOLD, 25));
         addCourseBtn.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -168,5 +172,90 @@ public class MainPane extends VBox {
             errorText.setText("");
         }
     }
+
+    private class onSave implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            //insert everything into database.
+            Connection connection;
+            try {
+                connection = DatabaseManager.getConnection(); //for getting the connection
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            // Clear the table before inserting new data
+            try (Statement clearStatement = connection.createStatement()) {
+                clearStatement.executeUpdate("DELETE FROM COURSES"); // Or use TRUNCATE TABLE EFFORT_LOGS
+            } catch (SQLException e) {
+                throw new RuntimeException("Failed to clear the table", e);
+            }
+            PreparedStatement preparedStatement = null; //prepared statement object
+            //insert valid inputs into DB
+            for(int i = 0 ; i < inputList.size(); i++){
+                if(inputList.get(i).verifyInput()){
+                    String insertSQL = "INSERT INTO COURSES (COURSE_NAME, LETTER_GRADE, CREDITS) VALUES (?, ?, ?);"; //the insert query
+                    try {
+                        preparedStatement = connection.prepareStatement(insertSQL); //creating the prepared statement object
+                        preparedStatement.setString(1, inputList.get(i).courseNameField.getText());
+                        preparedStatement.setString(2, inputList.get(i).letterGradeCB.getValue());
+                        preparedStatement.setString(3, inputList.get(i).numCreditsCb.getValue().toString());
+                        preparedStatement.executeUpdate();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+    }
+
+    //Extract fields from DB...
+    private class onLoad implements EventHandler<ActionEvent>{
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            //clear arraylist
+            inputList.clear();
+            inputColumn.getChildren().clear();
+            Connection connection = null; //for getting the connection
+            try {
+                connection = DatabaseManager.getConnection();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            PreparedStatement preparedStatement = null; //prepared statement object
+            ResultSet resultSet = null; //result set object
+            String str = "";
+            try{
+                String readSQL = "SELECT * FROM COURSES;"; //the read query
+                preparedStatement = connection.prepareStatement(readSQL); //initializing the prepared statement object
+                resultSet = preparedStatement.executeQuery(); //executing the query
+                while(resultSet.next()){ //iterating through the result set
+                    //getting the values and making a string out of it
+                    CourseInput ci = createBlock(MainPane.this,resultSet.getString("COURSE_NAME"),resultSet.getInt("CREDITS"),resultSet.getString("LETTER_GRADE"));
+                    inputList.add(ci);
+                    inputColumn.getChildren().add(ci);
+                }
+            }
+            catch (SQLException err){
+                err.printStackTrace();
+            }
+            finally { //closing the prepared statement
+                try {
+                    if (preparedStatement != null)
+                        preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public CourseInput createBlock(MainPane mp, String cname, int numCreds, String letter){
+        CourseInput cInput = new CourseInput(mp);
+        cInput.letterGradeCB.setValue(letter);
+        cInput.numCreditsCb.setValue(numCreds);
+        cInput.courseNameField.setText(cname);
+        return cInput;
+    }
+
 
 }

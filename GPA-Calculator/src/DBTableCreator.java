@@ -1,15 +1,13 @@
-/* This class makes use of the DatabaseConnection.java to establish connection
+/* This class makes use of the DatabaseManager.java to establish connection
  * to the H2 database and create the tables in the database.
  */
 
-//importing the required packages
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DBTableCreator {
 
-    //creating the method to create the EffortLog table in the database which holds the effort logs
     public static void createTableCourses() throws SQLException {
 
         //creating connection object
@@ -25,7 +23,7 @@ public class DBTableCreator {
                     "LETTER_GRADE VARCHAR(2), " +
                     "CREDITS INT);";
             statement.executeUpdate(createTableSQL); //executing the CREATE command
-            System.out.println("Effort Log table created successfully");
+            System.out.println("Table created successfully");
         }
         catch(SQLException err){ //catching any SQL exception
             err.printStackTrace();
