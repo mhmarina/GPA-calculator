@@ -29,6 +29,8 @@ public class MainPane extends VBox {
     private Label estimatedLetterLabel = new Label("F");
 
     public MainPane() {
+        calculateButton.setOnAction(new onCalculate());
+
         title.setFont(Font.font("Arial",FontWeight.BOLD, 25));
         addCourseBtn.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -67,4 +69,97 @@ public class MainPane extends VBox {
         inputColumn.getChildren().remove(courseInput);
         inputList.remove(courseInput);
     }
+
+    private class onCalculate implements EventHandler<ActionEvent>
+    {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            //do GPA Calculation
+            int totalCredits = 0;
+            double totalGPA = 0.0;
+            double letterGradeVal = 0.0;
+            for(int i = 0; i < inputList.size(); i++){
+                if(inputList.get(i).verifyInput()){
+                    totalCredits += inputList.get(i).numCreditsCb.getValue();
+                    switch(inputList.get(i).letterGradeCB.getValue()) {
+                        case "A+":
+                            letterGradeVal = 4.33;
+                            break;
+                        case "A":
+                            letterGradeVal = 4.0;
+                            break;
+                        case "A-":
+                            letterGradeVal = 3.67;
+                            break;
+                        case "B+":
+                            letterGradeVal = 3.33;
+                            break;
+                        case "B":
+                            letterGradeVal = 3.0;
+                            break;
+                        case "B-":
+                            letterGradeVal = 2.67;
+                            break;
+                        case "C+":
+                            letterGradeVal = 2.33;
+                            break;
+                        case "C":
+                            letterGradeVal = 2.0;
+                            break;
+                        case "C-":
+                            letterGradeVal = 1.67;
+                            break;
+                        case "D":
+                            letterGradeVal = 1.0;
+                            break;
+                        case "E":
+                            letterGradeVal = 0.0;
+                            break;
+                    }
+                    totalGPA += inputList.get(i).numCreditsCb.getValue() * letterGradeVal;
+                }
+                else{
+                    System.out.println("Error in input");
+                    return;
+                }
+            }
+            estimatedGPA = totalGPA / totalCredits ;
+            estimatedGPALabel.setText("GPA: " + estimatedGPA);
+            if(estimatedGPA >= 4.33){
+                estimatedLetterGrade = "A+";
+            }
+            else if(estimatedGPA < 4.33 && estimatedGPA >= 4.00){
+                estimatedLetterGrade = "A+";
+            }
+            else if(estimatedGPA < 4.0 && estimatedGPA >= 3.67){
+                estimatedLetterGrade = "A-";
+            }
+            else if(estimatedGPA < 3.67 && estimatedGPA >= 3.33){
+                estimatedLetterGrade = "B+";
+            }
+            else if(estimatedGPA < 3.33 && estimatedGPA >= 3.0){
+                estimatedLetterGrade = "B";
+            }
+            else if(estimatedGPA < 3.0 && estimatedGPA >= 2.67){
+                estimatedLetterGrade = "B-";
+            }
+            else if(estimatedGPA < 2.67 && estimatedGPA >= 2.33){
+                estimatedLetterGrade = "C+";
+            }
+            else if(estimatedGPA < 2.33 && estimatedGPA >= 2.0){
+                estimatedLetterGrade = "C";
+            }
+            else if(estimatedGPA < 2.0 && estimatedGPA >= 1.67){
+                estimatedLetterGrade = "C-";
+            }
+            else if(estimatedGPA < 1.67 && estimatedGPA >= 1.0){
+                estimatedLetterGrade = "D";
+            }
+            else if(estimatedGPA < 1.0){
+                estimatedLetterGrade = "E";
+            }
+            estimatedLetterLabel.setText(estimatedLetterGrade);
+        }
+    }
+
 }

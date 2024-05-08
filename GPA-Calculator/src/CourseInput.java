@@ -36,10 +36,10 @@ public class CourseInput extends HBox {
 
     public boolean verifyInput() {
         //verify that a grade and credit num is selected
-        if (numCreditsCb.getSelectionModel().getSelectedIndex() > -1) {
+        if (numCreditsCb.getSelectionModel().getSelectedIndex() == -1) {
             return false;
         }
-        if (letterGradeCB.getSelectionModel().getSelectedIndex() > -1) {
+        if (letterGradeCB.getSelectionModel().getSelectedIndex() == -1) {
             return false;
         }
         return true;
