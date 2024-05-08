@@ -131,7 +131,7 @@ public class MainPane extends VBox {
                 }
             }
             estimatedGPA = totalGPA / totalCredits ;
-            estimatedGPALabel.setText("GPA: " + estimatedGPA);
+            estimatedGPALabel.setText("GPA: " + String.format("%.2f", estimatedGPA));
             if(estimatedGPA >= 4.33){
                 estimatedLetterGrade = "A+";
             }
