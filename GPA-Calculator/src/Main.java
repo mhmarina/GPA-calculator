@@ -15,7 +15,7 @@ public class Main extends Application {
 
         MainPane mp = new MainPane();
         StackPane root = new StackPane();
-        Scene scene = new Scene(root, 640, 480);
+        Scene scene = new Scene(root, 800, 480);
         root.getChildren().add(mp);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);

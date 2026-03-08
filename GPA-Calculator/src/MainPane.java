@@ -136,7 +136,7 @@ public class MainPane extends VBox {
                 estimatedLetterGrade = "A+";
             }
             else if(estimatedGPA < 4.33 && estimatedGPA >= 4.00){
-                estimatedLetterGrade = "A+";
+                estimatedLetterGrade = "A";
             }
             else if(estimatedGPA < 4.0 && estimatedGPA >= 3.67){
                 estimatedLetterGrade = "A-";
@@ -271,6 +271,4 @@ public class MainPane extends VBox {
         cInput.courseNameField.setText(cname);
         return cInput;
     }
-
-
 }
