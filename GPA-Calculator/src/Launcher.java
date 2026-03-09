@@ -1,0 +1,6 @@
+// workaround for stand-alone jars
+public class Launcher {
+    public static void main(String[] args) {
+        Main.main(args);
+    }
+}
